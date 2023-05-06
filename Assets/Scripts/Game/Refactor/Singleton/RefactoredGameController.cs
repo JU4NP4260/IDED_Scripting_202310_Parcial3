@@ -30,7 +30,7 @@ public sealed class RefactoredGameController : GameControllerBase
         return GameControllerInstance;
     }
 
-    protected override void OnObstacleDestroyed(int hp)
+    protected override void OnScoreChanged(int hp)
     {
         throw new System.NotImplementedException();
     }
