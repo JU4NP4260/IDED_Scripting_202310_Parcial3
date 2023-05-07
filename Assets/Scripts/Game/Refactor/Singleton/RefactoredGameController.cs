@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public sealed class RefactoredGameController : GameControllerBase
@@ -21,9 +22,19 @@ public sealed class RefactoredGameController : GameControllerBase
 
     private void Awake()
     {
-        GetInstance();
+        if (gameControllerInstance == null)
+        {
+            gameControllerInstance = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+            Destroy(gameObject);
+
+        ObstacleDestroyedEvent += OnObstacleDestroyed;
     }
 
+
+    /*
     private static RefactoredGameController GetInstance()
     {
         if (gameControllerInstance == null)
@@ -32,6 +43,8 @@ public sealed class RefactoredGameController : GameControllerBase
         }
         return gameControllerInstance;
     }
+    */
+
 
     protected override void OnObstacleDestroyed(int hp) 
     {

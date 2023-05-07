@@ -3,7 +3,7 @@ using System;
 public class RefactoredPlayerController : PlayerControllerBase
 {
     private PoolBase pool;
-    protected override bool NoSelectedBullet => throw new System.NotImplementedException();
+    protected override bool NoSelectedBullet => pool == null;
 
     public static Action<int> UiBulletSwap;
 
@@ -12,16 +12,32 @@ public class RefactoredPlayerController : PlayerControllerBase
 
     private void Awake()
     {
-        GetInstance();
+        if (playerControllerInstance == null)
+        {
+            playerControllerInstance = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+            Destroy(gameObject);
     }
 
-    /*
-    private void Start()
+
+    protected override void Start()
     {
-        NotifyObservers();
-    }
-    */
+        //NotifyObservers();
 
+        base.Start();
+        GameOverNotifications();
+    }
+
+
+    private void GameOverNotifications()
+    {
+        RefactoredGameController.GameOverEvent += OnGameOver;
+        RefactoredGameController.PlayerUpdateScore += UpdateScore;
+    }
+
+    /*    useless implementation
     private static RefactoredPlayerController GetInstance() 
     {
         if (playerControllerInstance == null)
@@ -30,12 +46,11 @@ public class RefactoredPlayerController : PlayerControllerBase
         }
         return playerControllerInstance;
     }
-
-
+    */
 
     protected override void Shoot()
     {
-        //base.Shoot();
+        //base.Shoot(); 
     }
 
     protected override void SelectBullet(int index)
@@ -45,14 +60,19 @@ public class RefactoredPlayerController : PlayerControllerBase
         switch (index)
         {
             case 0:
-                pool = PoolRedBullet;
+                pool = RedBulletPool.Instance;
                 break;
 
             case 1:
+                pool = GreenBulletPool.Instance;
                 break;
 
             case 2:
+                pool = BlueBulletPool.Instance;
                 break;
+
         }
+
+        if (UiBulletSwap != null) { UiBulletSwap(index); }
     }
 }
