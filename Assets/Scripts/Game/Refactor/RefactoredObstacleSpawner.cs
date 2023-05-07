@@ -2,26 +2,25 @@ using UnityEngine;
 
 public class RefactoredObstacleSpawner : ObstacleSpawnerBase
 {
-    [SerializeField]
-    private PoolBase obstacleLowPool;
+    [SerializeField] private PoolBase obstacleLowPool;
+    [SerializeField] private PoolBase obstacleMidPool;
+    [SerializeField] private PoolBase obstacleHardPool;
 
-    [SerializeField]
-    private PoolBase obstacleMidPool;
+    public static RefactoredObstacleSpawner ObstacleSpawnerInstance { get => obstacleSpawnerInstance; set => obstacleSpawnerInstance = value; }
+    private static RefactoredObstacleSpawner obstacleSpawnerInstance;
 
-    [SerializeField]
-    private PoolBase obstacleHardPool;
-
-    private static RefactoredObstacleSpawner ObstacleSpawnerInstance;
-
-    private RefactoredObstacleSpawner() { }
-
-    public static RefactoredObstacleSpawner GetInstance()
+    private void Awake()
     {
-        if (ObstacleSpawnerInstance == null)
+        GetInstance();
+    }
+
+    private static RefactoredObstacleSpawner GetInstance()
+    {
+        if (obstacleSpawnerInstance == null)
         {
-            ObstacleSpawnerInstance = new RefactoredObstacleSpawner();
+            obstacleSpawnerInstance = new RefactoredObstacleSpawner();
         }
-        return ObstacleSpawnerInstance;
+        return obstacleSpawnerInstance;
     }
 
     protected override void SpawnObject()

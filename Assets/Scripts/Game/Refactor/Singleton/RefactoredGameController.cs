@@ -1,39 +1,55 @@
+using System;
 using UnityEngine;
 
 public sealed class RefactoredGameController : GameControllerBase
 {
-    [SerializeField]
-    private RefactoredUIManager uiManager;
+    [SerializeField] private RefactoredUIManager uiManager;
+    [SerializeField] private RefactoredPlayerController playerController;
+    [SerializeField] private RefactoredObstacleSpawner obstacleSpawner;
 
-    [SerializeField]
-    private RefactoredPlayerController playerController;
+    public static event Action GameOverEvent;
+    public static event Action UiUpdateScore;
+    public static event Action<int> PlayerUpdateScore;
+    public static event Action<int> ObstacleDestroyedEvent;
 
-    [SerializeField]
-    private RefactoredObstacleSpawner obstacleSpawner;
+    protected override PlayerControllerBase PlayerController => RefactoredPlayerController.PlayerControllerInstance;
+    protected override UIManagerBase UiManager => RefactoredUIManager.UIManagerInstance;
+    protected override ObstacleSpawnerBase Spawner => RefactoredObstacleSpawner.ObstacleSpawnerInstance;
 
-    protected override PlayerControllerBase PlayerController => playerController;
+    public static RefactoredGameController GameControllerInstance { get => gameControllerInstance; set => gameControllerInstance = value; }
+    private static RefactoredGameController gameControllerInstance;
 
-    protected override UIManagerBase UiManager => uiManager;
-
-    protected override ObstacleSpawnerBase Spawner => obstacleSpawner;
-
-    private static RefactoredGameController GameControllerInstance;
-
-    private RefactoredGameController() { }
-
-    public static RefactoredGameController GetInstance()
+    private void Awake()
     {
-        if (GameControllerInstance == null)
+        GetInstance();
+    }
+
+    private static RefactoredGameController GetInstance()
+    {
+        if (gameControllerInstance == null)
         {
-            GameControllerInstance = new RefactoredGameController();
+            gameControllerInstance = new RefactoredGameController();
         }
-        return GameControllerInstance;
+        return gameControllerInstance;
     }
 
-    protected override void OnScoreChanged(int hp)
+    protected override void OnObstacleDestroyed(int hp) 
     {
-        throw new System.NotImplementedException();
+        //NotifyObservers();
+
+        if(UiUpdateScore != null) { UiUpdateScore(); }
+        if(PlayerUpdateScore != null) { PlayerUpdateScore(hp); }
+
     }
 
+    protected override void SetGameOver()
+    {
+        if(GameOverEvent != null) { GameOverEvent(); }
+        base.SetGameOver();
+    }
 
+    protected override void OnScoreChanged(int scoreAdd)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -1,19 +1,22 @@
 public class RefactoredUIManager : UIManagerBase
 {
     protected override PlayerControllerBase PlayerController => throw new System.NotImplementedException();
-
     protected override GameControllerBase GameController => throw new System.NotImplementedException();
 
-    private static RefactoredUIManager UIManagerInstance;
+    public static RefactoredUIManager UIManagerInstance { get => uIManagerInstance; set => uIManagerInstance = value; }
+    private static RefactoredUIManager uIManagerInstance;
 
-    private RefactoredUIManager() { }
-
-    public static RefactoredUIManager GetInstance()
+    private void Awake()
     {
-        if (UIManagerInstance == null)
+        GetInstance();
+    }
+
+    private static RefactoredUIManager GetInstance()
+    {
+        if (uIManagerInstance == null)
         {
-            UIManagerInstance = new RefactoredUIManager();
+            uIManagerInstance = new RefactoredUIManager();
         }
-        return UIManagerInstance;
+        return uIManagerInstance;
     }
 }

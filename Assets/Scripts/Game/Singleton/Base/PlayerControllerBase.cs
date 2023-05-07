@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class PlayerControllerBase : MonoBehaviour
+public abstract class PlayerControllerBase : Subject
 {
     [Header("Movement params")]
     [SerializeField]

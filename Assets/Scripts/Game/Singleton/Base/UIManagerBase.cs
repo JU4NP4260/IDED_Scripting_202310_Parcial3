@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public abstract class UIManagerBase : MonoBehaviour
+public abstract class UIManagerBase : Subject
 {
     [SerializeField]
     private Image[] bulletIcons;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class GameControllerBase : MonoBehaviour
+public abstract class GameControllerBase : Subject
 {
     [SerializeField]
     private float playTime = 60F;
@@ -14,7 +14,7 @@ public abstract class GameControllerBase : MonoBehaviour
 
     protected abstract void OnScoreChanged(int scoreAdd);
 
-    protected void OnObstacleDestroyed(int hp)
+    protected virtual void OnObstacleDestroyed(int hp)
     {
         OnScoreChanged(hp);
     }
